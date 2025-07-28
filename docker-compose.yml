@@ -1,0 +1,25 @@
+
+version: '3.8'
+
+services:
+  # Servicio para aplicación Flask
+  flask-app:
+    build: . 
+    container_name: monday_flask_app 
+    ports:
+      - "5000:5000" 
+                   
+
+  # Servicio para ngrok
+  ngrok-tunnel:
+    image: ngrok/ngrok:latest 
+    container_name: monday_ngrok_tunnel 
+    restart: always 
+    depends_on:
+      - flask-app 
+    environment:
+    NGROK_AUTHTOKEN: <TU_AUTHTOKEN_PERSONAL>
+
+    command: ["http", "flask-app:5000", "--log", "stdout"] # Comando para iniciar ngrok
+    ports:
+      - "4040:4040" 
